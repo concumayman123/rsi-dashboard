@@ -8,8 +8,8 @@ from ta.momentum import RSIIndicator
 st.set_page_config(page_title="Crypto RSI Dashboard", layout="wide")
 st.title("📊 Biểu Đồ RSI Top 100 Binance")
 
-# Khởi tạo Binance
-exchange = ccxt.binance()
+# Khởi tạo sàn Bybit để lách luật IP Mỹ
+exchange = ccxt.bybit()
 
 # Hàm lấy Top 100 (Dùng cache để web chạy nhanh hơn)
 @st.cache_data(ttl=3600) # Lưu bộ nhớ đệm 1 tiếng để đỡ phải quét lại list
