@@ -3,14 +3,13 @@ import ccxt
 import pandas as pd
 import plotly.graph_objects as go
 from ta.momentum import RSIIndicator
-import time  # Thêm công cụ quản lý thời gian
+import time
 
 # Cấu hình trang Web
 st.set_page_config(page_title="Crypto RSI Dashboard", layout="wide")
 st.title("📊 Biểu Đồ RSI Top 100 Coin")
 
-# Khởi tạo sàn OKX (Rất thân thiện) 
-# 'enableRateLimit': True giúp bot tự động phanh lại nếu sàn yêu cầu
+# Khởi tạo sàn OKX 
 exchange = ccxt.okx({
     'enableRateLimit': True,
 })
@@ -49,14 +48,9 @@ if st.button("🔄 Cập nhật dữ liệu ngay bây giờ"):
         if rsi_val is not None:
             results.append({"Coin": coin.replace('/USDT', ''), "RSI": rsi_val, "Index": i+1})
         progress_bar.progress((i + 1) / 100)
-        
-        # TUYỆT CHIÊU CHỐNG BLOCK: Dừng 0.1 giây sau khi soi xong 1 con
         time.sleep(0.1)
         
     df_res = pd.DataFrame(results)
-    
-    # LỌC TÊN
-    display_text = [coin if (r >= 70 or r <= 30) else "" for coin, r in zip(df_res['Coin'], df_res['RSI'])]
 
     # --- PHẦN VẼ BIỂU ĐỒ ---
     fig = go.Figure()
@@ -65,7 +59,7 @@ if st.button("🔄 Cập nhật dữ liệu ngay bây giờ"):
         x=df_res['Index'],
         y=df_res['RSI'],
         mode='markers+text',
-        text=display_text,
+        text=df_res['Coin'], # <--- ĐÃ GỠ LỚP TÀNG HÌNH, HIỂN THỊ FULL 100 TÊN COIN
         textposition="top center",
         marker=dict(
             size=10,
